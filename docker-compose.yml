@@ -2,12 +2,12 @@ services:
 
   nginx:
     image: nginx:latest
-    container_name: scan-nginx
+    container_name: xenetis-frontend
     ports:
       - "${HTTP_EXPOSED_PORT}:80"
     restart: unless-stopped
     volumes:
-      - ${DOCKER_TECHNICAL_PATH}/_logs/nginx:/var/log/nginx
+      - ${DOCKER_TECHNICAL_PATH}/nginx_logs:/var/log/nginx
       - ../scan-backend:/var/www/html
       - ./config/nginx/default.conf:/etc/nginx/conf.d/default.conf
     environment:
