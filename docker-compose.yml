@@ -7,7 +7,7 @@ services:
       - "${HTTP_EXPOSED_PORT}:80"
     restart: unless-stopped
     volumes:
-      - ${DOCKER_TECHNICAL_PATH}/nginx_logs:/var/log/nginx
+      - ${DOCKER_DATA_PATH}/nginx_logs:/var/log/nginx
       - ../scan-backend:/var/www/html
       - ./config/nginx/default.conf:/etc/nginx/conf.d/default.conf
     environment:
@@ -37,8 +37,8 @@ services:
       MYSQL_PASSWORD: ${MARIADB_PASSWORD}
       MYSQL_DATABASE: ${MARIADB_DATABASE}
     volumes:
-      - ${DOCKER_TECHNICAL_PATH}/mariadb:/var/lib/mysql
-      - ${DOCKER_TECHNICAL_PATH}/mariadb_logs:/var/log/mysql
+      - ${DOCKER_DATA_PATH}/mariadb:/var/lib/mysql
+      - ${DOCKER_DATA_PATH}/mariadb_logs:/var/log/mysql
       - ./config/mariadb:/etc/mysql
     ports:
       - "${MARIADB_EXPOSED_PORT}:3306"
