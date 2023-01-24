@@ -1,0 +1,50 @@
+services:
+
+  nginx:
+    image: nginx:latest
+    container_name: scan-nginx
+    ports:
+      - "${HTTP_EXPOSED_PORT}:80"
+    restart: unless-stopped
+    volumes:
+      - ${DOCKER_TECHNICAL_PATH}/_logs/nginx:/var/log/nginx
+      - ../scan-backend:/var/www/html
+      - ./config/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    environment:
+      TZ: Europe/Paris
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend.Dockerfile
+    container_name: xenetis-restful-php-backend
+    restart: unless-stopped
+    volumes:
+      - ../restful-api-jwt-php-server:/var/www/html
+    environment:
+      TZ: Europe/Paris
+    networks:
+       - xenetis-restful-network
+
+  mariadb:
+    image: mariadb:10.5
+    container_name: xenetis-restful-mariadb
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Paris
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MYSQL_USER: ${MARIADB_USER}
+      MYSQL_PASSWORD: ${MARIADB_PASSWORD}
+      MYSQL_DATABASE: ${MARIADB_DATABASE}
+    volumes:
+      - ${DOCKER_TECHNICAL_PATH}/mariadb:/var/lib/mysql
+      - ${DOCKER_TECHNICAL_PATH}/mariadb_logs:/var/log/mysql
+      - ./config/mariadb:/etc/mysql
+    ports:
+      - "${MARIADB_EXPOSED_PORT}:3306"
+    networks:
+      - xenetis-restful-network
+
+networks:
+  xenetis-restful-network:
+    driver: bridge
